@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseInterface", "Databa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiscordBot", "DiscordBot\DiscordBot.csproj", "{0C638F57-0FC0-44E7-A077-E6143FF822FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor", "Blazor\Blazor.csproj", "{D71B2E54-C2BE-4F29-80FF-F423E194A601}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{0C638F57-0FC0-44E7-A077-E6143FF822FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C638F57-0FC0-44E7-A077-E6143FF822FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C638F57-0FC0-44E7-A077-E6143FF822FE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D71B2E54-C2BE-4F29-80FF-F423E194A601}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D71B2E54-C2BE-4F29-80FF-F423E194A601}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D71B2E54-C2BE-4F29-80FF-F423E194A601}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D71B2E54-C2BE-4F29-80FF-F423E194A601}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
