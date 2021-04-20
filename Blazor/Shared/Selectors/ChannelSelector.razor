@@ -1,0 +1,37 @@
+@inherits ChannelSelectorBase
+
+
+<FormGroup>
+    <BlazorLabel For="ChannelSelector">Channel</BlazorLabel>
+    <Dropdown Id="ChannelSelector" IsOpen="@IsOpen">
+        <DropdownToggle @onclick="@OnClick">@(Channels.Count > 0 ? Channels.Find(x => x.ID == ChannelID).Name : "Loading...")</DropdownToggle>
+        <DropdownMenu IsOpen="@IsOpen">
+            @foreach (var s in Channels)
+            {
+                <DropdownItem @key="@s.ID" @onclick="@(async (e) => await ChannelSelected(s.ID))">@s.Name</DropdownItem>
+            }
+        </DropdownMenu>
+    </Dropdown>
+</FormGroup>
+
+@code {
+private bool IsOpen = false;
+
+
+private void OnClick(UIMouseEventArgs e)
+{
+    IsOpen = !IsOpen;
+    StateHasChanged();
+}
+
+protected async Task ChannelSelected(long newSelection)
+{
+    if (newSelection != ChannelID)
+    {
+        ChannelID = newSelection;
+        await ChannelIDChanged.InvokeAsync(ChannelID);
+    }
+    IsOpen = false;
+}
+
+}

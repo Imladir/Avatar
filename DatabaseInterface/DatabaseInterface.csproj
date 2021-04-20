@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <RootNamespace>EmeraldBot.Model</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20190610055254_Rokugan2.cs" />
+    <Compile Remove="Migrations\20190610055254_Rokugan2.Designer.cs" />
+    <Compile Remove="Migrations\20190611162416_Rokugan3.cs" />
+    <Compile Remove="Migrations\20190611162416_Rokugan3.Designer.cs" />
+    <Compile Remove="Migrations\20190612051316_Rokugan4.cs" />
+    <Compile Remove="Migrations\20190612051316_Rokugan4.Designer.cs" />
+    <Compile Remove="Migrations\20190612144938_Fix2.cs" />
+    <Compile Remove="Migrations\20190612144938_Fix2.Designer.cs" />
+    <Compile Remove="Migrations\20190612151520_Initial2.cs" />
+    <Compile Remove="Migrations\20190612151520_Initial2.Designer.cs" />
+    <Compile Remove="Migrations\20190615113840_MovedClan.cs" />
+    <Compile Remove="Migrations\20190615113840_MovedClan.Designer.cs" />
+    <Compile Remove="Migrations\20190615114022_MovedClan.cs" />
+    <Compile Remove="Migrations\20190615114022_MovedClan.Designer.cs" />
+    <Compile Remove="Migrations\20190615114225_MovedClan.cs" />
+    <Compile Remove="Migrations\20190615114225_MovedClan.Designer.cs" />
+    <Compile Remove="Migrations\20190615114541_MovedClan.cs" />
+    <Compile Remove="Migrations\20190615114541_MovedClan.Designer.cs" />
+    <Compile Remove="Migrations\20190615192812_CharactersOnMessages.cs" />
+    <Compile Remove="Migrations\20190615192812_CharactersOnMessages.Designer.cs" />
+    <Compile Remove="Migrations\20190615193340_CharactersOnMessages.cs" />
+    <Compile Remove="Migrations\20190615193340_CharactersOnMessages.Designer.cs" />
+    <Compile Remove="Migrations\20190619174924_Conflicts.cs" />
+    <Compile Remove="Migrations\20190619174924_Conflicts.Designer.cs" />
+    <Compile Remove="Migrations\20190619201209_MovedStuffFromCharacterToPC.cs" />
+    <Compile Remove="Migrations\20190619201209_MovedStuffFromCharacterToPC.Designer.cs" />
+    <Compile Remove="Migrations\20190619203438_MovedStuffFromCharacterToPC.cs" />
+    <Compile Remove="Migrations\20190619203438_MovedStuffFromCharacterToPC.Designer.cs" />
+    <Compile Remove="Migrations\20190624061454_Gear.cs" />
+    <Compile Remove="Migrations\20190624061454_Gear.Designer.cs" />
+    <Compile Remove="Migrations\20190624065449_Gear.cs" />
+    <Compile Remove="Migrations\20190624065449_Gear.Designer.cs" />
+    <Compile Remove="Migrations\20190624065928_Gear.cs" />
+    <Compile Remove="Migrations\20190624065928_Gear.Designer.cs" />
+    <Compile Remove="Migrations\20190624073314_Gear.cs" />
+    <Compile Remove="Migrations\20190624073314_Gear.Designer.cs" />
+    <Compile Remove="Migrations\20190624074925_Gear.cs" />
+    <Compile Remove="Migrations\20190624074925_Gear.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EfCore.GenericServices" Version="2.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.0.0-preview6.19307.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.0-preview6.19304.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.0.0-preview6.19304.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0-preview6.19304.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0-preview6.19304.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="System.Data.SqlClient" Version="4.7.0-preview6.19303.8" />
+  </ItemGroup>
+
+</Project>

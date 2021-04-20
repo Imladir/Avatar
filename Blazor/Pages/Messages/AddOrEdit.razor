@@ -1,0 +1,51 @@
+@inherits AddOrEditBase
+
+<RedirectToLoginIfNotAuthorized />
+
+<Container IsFluid="true">
+    <Row>
+        <BlazorCol>
+            <BlazorForm>
+                @if (IsEdit)
+                {
+                <h1>Message edition</h1>
+                <CharacterSelector Server="@Server" @bind-PC="@PC" AllowEmpty="true" />
+                }
+                else
+                {
+                <h1>Send a new message</h1>
+                <Container>
+                    <Row>
+                        <BlazorCol><ServerSelector @bind-Server="@Server" /></BlazorCol>
+                        <BlazorCol><ChannelSelector Server="@Server" @bind-ChannelID="@Message.DiscordChannelID" /></BlazorCol>
+                        <BlazorCol><CharacterSelector Server="@Server" @bind-PC="@PC" AllowEmpty="false" /></BlazorCol>
+                    </Row>
+                </Container>
+                }
+                <BlazorInput InputType="InputType.Text" @bind-Value="@Message.Title" PlaceHolder="Message title" />
+                <BlazorInput Id="MessageText" InputType="InputType.TextArea" @bind-Value="@Message.Text" Rows="12" @onkeyup="@UpdateCharacterCount" />
+                </BlazorForm>
+                @if (@TextLength < 2048)
+            {
+                <Alert Color="Color.Success">
+                    @TextLength Characters
+                </Alert>
+            }
+            else
+            {
+                <Alert Color="Color.Danger">
+                    @TextLength Characters
+                </Alert>
+            }
+                <BlazorButton Color="Color.Success" @onclick="@SaveMessage">Save Message</BlazorButton>
+                </BlazorCol>
+                <BlazorCol style="width:300px; max-width: 25%;">
+                    <Image IsRounded="true" Alignment="Alignment.Center" src="@(PC != null ? PC.Icon : Message.Icon)" style="width: 100%; height: auto;" />
+                </BlazorCol>
+            </Row>
+</Container>
+
+@*<input @bind="@Message.Title" />
+    <br />
+    <textarea @ref="editor" @bind="@Message.Text" @onkeyup="@UpdateCharacterCount" rows="15" cols="100"></textarea>*@
+

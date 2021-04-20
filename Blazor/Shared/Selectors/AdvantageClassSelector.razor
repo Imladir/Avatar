@@ -1,0 +1,44 @@
+﻿@using EmeraldBot.Model
+@using EmeraldBot.Model.Game
+
+@inject EmeraldBotContext _ctx
+
+<FormGroup>
+    <BlazorLabel For="ClassSelector">Advantage Class</BlazorLabel>
+    <Dropdown Id="ClassSelector" IsOpen="@IsOpen">
+        <DropdownToggle @onclick="@(() => { IsOpen = !IsOpen; StateHasChanged(); })">@(_classes.Count > 0 ? _classes.Find(x => x.ID == Class.ID).Name : "Loading...")</DropdownToggle>
+        <DropdownMenu IsOpen="@IsOpen">
+            @foreach (var c in _classes)
+            {
+                <DropdownItem @key="@c.ID" @onclick="@(() => ClassSelected(c))">@c.Name</DropdownItem>
+            }
+        </DropdownMenu>
+    </Dropdown>
+</FormGroup>
+
+@code  {
+    [Parameter] private EventCallback<AdvantageClass> ClassChanged { get; set; }
+    [Parameter] private AdvantageClass Class { get; set; }
+    private bool IsOpen = false;
+    private List<AdvantageClass> _classes = new List<AdvantageClass>();
+
+    protected override async Task OnInitAsync()
+    {
+        _classes = _ctx.AdvantageClasses.OrderBy(x => x.Name).ToList();
+        if (Class == null)
+        {
+            Class = _classes[0];
+            await ClassChanged.InvokeAsync(Class);
+        }
+    }
+
+    protected async Task ClassSelected(AdvantageClass c)
+    {
+        if (Class != c)
+        {
+            Class = c;
+            await ClassChanged.InvokeAsync(Class);
+        }
+        IsOpen = false;
+    }
+}

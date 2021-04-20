@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "DiscordBot": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "bot_token": "ODM0MDIxOTI1NTE1Njg5OTk0.YH61cg.khAyIj6NXy2U0BC_2KJNKw1CAK0",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+﻿@using EmeraldBot.Model
+@using EmeraldBot.Model.Game
+@using System.Linq
+
+@inject EmeraldBotContext _ctx
+
+<BlazorButton IsOutline="true" Color="Color.None" @onclick="@(() => IsOpen = !IsOpen)">Advantage Types</BlazorButton>
+<Collapse IsOpen="@IsOpen">
+    <ul>
+        @foreach (var t in _ctx.AdvantageTypes.OrderBy(x => x.Name).ToList())
+        {
+            @*<li><BlazorInput InputType="InputType.Checkbox" id="@g.Name" @onclick="@(() => UpdateGroup(g))" IsChecked="@GroupChecked[g.ID]" /><BlazorLabel For="@g.Name">@g.Name</BlazorLabel></li>*@
+            <li><input type="checkbox" id="@t.Name" value="@t.Name" @onchange="@(() => UpdateType(t))" checked="@TypesChecked[t.ID]" /> <BlazorLabel For="@t.Name">@t.Name</BlazorLabel></li>
+        }
+    </ul>
+</Collapse>
+
+@code {
+[Parameter] private EventCallback<ICollection<AdvantageTypeAdvantages>> TypesChanged { get; set; }
+[Parameter] private ICollection<AdvantageTypeAdvantages> Types { get; set; }
+private Dictionary<int, bool> TypesChecked = new Dictionary<int, bool>();
+private bool IsOpen = false;
+private bool isInit = false;
+
+protected override void OnInit()
+{
+    TypesChecked = _ctx.AdvantageTypes.ToDictionary(x => x.ID, x => false);
+}
+
+protected override void OnParametersSet()
+{
+    if (!isInit)
+    {
+        if (Types != null)
+        {
+            foreach (var at in Types) TypesChecked[at.AdvantageType.ID] = true;
+        }
+        isInit = true;
+    }
+}
+
+private async Task UpdateType(AdvantageType type)
+{
+    var at = Types.SingleOrDefault(x => x.AdvantageType.ID == type.ID);
+    if (at != null) Types.Remove(at);
+    else Types.Add(new AdvantageTypeAdvantages() { AdvantageType = type });
+    await TypesChanged.InvokeAsync(Types);
+}
+}

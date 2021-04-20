@@ -1,0 +1,44 @@
+﻿@page  "/messages/{id:int}"
+@using Microsoft.AspNetCore.Html
+@using EmeraldBot.Model
+@using EmeraldBot.Model.Servers
+
+@inject EmeraldBotContext _ctx
+@inject  IUriHelper _uri
+
+<RedirectToLoginIfNotAuthorized />
+
+@if (_message == null)
+{
+    <p><em>Message wasn't found. Has it been deleted?</em></p>
+}
+else
+{
+    <Container IsFluid="true">
+        <Row>
+            <BlazorCol>
+                <h1>@_message.Title</h1>
+                <p>@(DateTime.SpecifyKind(_message.CreatedDate, DateTimeKind.Utc).ToLocalTime().ToString("ddddd dd MMMM yyyy, HH:mm"))</p>
+                <BlazorButton IsOutline="true" Color="Color.Secondary" @onclick="@((e) => _uri.NavigateTo($"messages/"))">Back</BlazorButton>
+                <BlazorButton IsOutline="true" Color="Color.Success" @onclick="@((e) => _uri.NavigateTo($"messages/{_message.ID}/edit"))">Edit</BlazorButton>
+                <BlazorButton IsOutline="true" Color="Color.Danger" @onclick="@((e) =>_uri.NavigateTo($"messages/{_message.ID}/delete"))">Delete</BlazorButton>
+                <p>@((MarkupString)_message.Text.ToHTML())</p>
+            </BlazorCol>
+            <BlazorCol style="width:300px; max-width: 25%;">
+                <Image IsRounded="true" Alignment="Alignment.Center" src="@_message.Icon" style="width: 100%; height: auto;" />
+            </BlazorCol>
+        </Row>
+    </Container>
+}
+
+@code {
+[CascadingParameter(Name = "UserID")] protected int UserID { get; set; }
+[Parameter] private int id { get; set; }
+private Message _message;
+
+    protected override void OnInit()
+    {
+        if (UserID == -1) return;
+        _message = _ctx.Messages.SingleOrDefault(x => x.ID == id);
+    }
+}
