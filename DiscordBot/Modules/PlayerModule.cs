@@ -45,7 +45,6 @@ namespace EmeraldBot.Bot.Modules
                     {
                         defChar.Character = character;
                     }
-                    Console.WriteLine(defChar);
                     ctx.SaveChanges();
                     await ReplyAsync($"{character.Name} has been set as your default character");
                 }

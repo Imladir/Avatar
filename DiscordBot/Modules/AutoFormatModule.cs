@@ -21,6 +21,10 @@ namespace EmeraldBot.Bot.Modules
         {
             try
             {
+                if (options.Target == null)
+                {
+                    throw new Exception($"target character not found: doesn't exist or you don't have the rights for it?");
+                }
                 var msg = await Talk(options.Target, options.Text);
                 using var ctx = new AvatarBotContext();
                 ctx.Messages.Add(msg);
