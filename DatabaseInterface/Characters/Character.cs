@@ -31,6 +31,7 @@ namespace EmeraldBot.Model.Characters
         public string Icon { get; set; } = "";
         public int Colour { get; set; } = 0;
         public string Description { get; set; } = "";
+        public bool Hidden { get; set; } = false;
 
         public Character()
         {
@@ -39,6 +40,7 @@ namespace EmeraldBot.Model.Characters
             Icon = "";
             Colour = 0;
             Description = "";
+            Hidden = false;
         }
 
         public virtual void FullLoad(AvatarBotContext ctx)
@@ -69,6 +71,7 @@ namespace EmeraldBot.Model.Characters
                     case "description": Description = value; return true;
                     case "icon": Icon = value; return true;
                     case "colour": Colour = ParseColour(value); return true;
+                    case "hidden": Hidden = value == "1" || value.ToLower() == "true"; return true;
                 }
             }
             catch (FormatException e)

@@ -104,7 +104,7 @@ namespace EmeraldBot.Bot.Tools
                     var player = ctx.Users.SingleOrDefault(x => x.DiscordID == (long)message.Author.Id);
                     if (player == null)
                     {
-                        player = new User() { DiscordID = (long)message.Author.Id };
+                        player = new User() { DiscordID = (long)message.Author.Id, UserName = message.Author.Username };
                         ctx.Users.Add(player);
                         ctx.SaveChanges();
                     }

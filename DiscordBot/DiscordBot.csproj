@@ -29,4 +29,17 @@
   <ItemGroup>
     <ProjectReference Include="..\DatabaseInterface\DatabaseInterface.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Strings.en.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>strings.en.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\strings.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

@@ -26,15 +26,19 @@ namespace EmeraldBot.Bot.Modules
             using var dbTransaction = ctx.Database.BeginTransaction();
             try
             {
+                var player = ctx.Users.Single(x => x.DiscordID == (long)Context.User.Id);
+                var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
                 var newChar = new PC()
                 {
                     Alias = alias,
                     Name = alias,
-                    Server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id),
-                    Player = ctx.Users.Single(x => x.DiscordID == (long)Context.User.Id)
+                    Server = server,
+                    Player = player
                 };
 
                 ctx.Characters.Add(newChar);
+                // Users can't have hidden characters
+                if (!ctx.HasPrivilege(server.ID, player.ID)) options.Params["hidden"] = "false";
                 var msg = UpdateChar(ctx, newChar, options.Params);
                 if (msg == "") msg = $"{newChar.Name} has been succesfully created.";
                 ctx.SaveChanges();
@@ -67,6 +71,9 @@ namespace EmeraldBot.Bot.Modules
                 options.Reattach(ctx);
                 //options.Target.FullLoad(ctx);
 
+                var player = ctx.Users.Single(x => x.DiscordID == (long)Context.User.Id);
+                var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
+                if (!ctx.HasPrivilege(server.ID, player.ID)) options.Params["hidden"] = "false";
                 var msg = UpdateChar(ctx, options.Target, options.Params);
                 if (msg == "") msg = $"{options.Target.Name} has been succesfully updated.";
                 ctx.SaveChanges();

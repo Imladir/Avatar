@@ -41,7 +41,14 @@ namespace EmeraldBot.Bot.Modules
                     case "allcharacters": msg = PrintListCharacters(filter, 2); break;
                     default: throw new System.Exception($"Unknown command '{type}'.");
                 }
-                foreach (var m in msg.FitDiscordMessageSize()) await ReplyAsync(m);
+                if (msg.Count == 0)
+                {
+                    await ReplyAsync($"No character found.");
+                }
+                else
+                {
+                    foreach (var m in msg.FitDiscordMessageSize()) await ReplyAsync(m);
+                }
                 await Context.Channel.DeleteMessageAsync(Context.Message);
             }
             catch (Exception e)
@@ -57,8 +64,11 @@ namespace EmeraldBot.Bot.Modules
 
             using (var ctx = new AvatarBotContext())
             {
+                var player = ctx.Users.Single(x => x.DiscordID == (long)Context.User.Id);
+                var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
                 List<PC> pcs = ctx.Characters.OfType<PC>().Where(x => x.Server.DiscordID == (long)Context.Guild.Id
-                                                          && (filter.Equals("") || x.Name.Contains(filter) || x.Alias.Contains(filter))).ToList();
+                                                          && (filter.Equals("") || x.Name.Contains(filter) || x.Alias.Contains(filter))
+                                                          && (x.Hidden == false || ctx.HasPrivilege(server.ID, player.ID))).ToList();
 
                 foreach (var c in pcs.OrderBy(x => x.Name))
                 {
@@ -86,32 +96,36 @@ namespace EmeraldBot.Bot.Modules
             ulong serverID = Context.Guild.Id;
             var emds = new List<Embed>();
 
-            using (var ctx = new AvatarBotContext())
+            using var ctx = new AvatarBotContext();
+            try
             {
-                try
+                var player = ctx.Users.Single(x => x.DiscordID == (long)Context.User.Id);
+                var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
+                var c = ctx.Characters.SingleOrDefault(x => x.Server.DiscordID == (long)serverID
+                                                         && (x.Name.Equals(nameOrAlias) || x.Alias.Equals(nameOrAlias))
+                                                         && (x.Hidden == false || ctx.HasPrivilege(server.ID, player.ID)));
+                if (c != null)
                 {
-                    var c = ctx.Characters.SingleOrDefault(x => x.Server.DiscordID == (long)serverID
-                                                             && (x.Name.Equals(nameOrAlias) || x.Alias.Equals(nameOrAlias)));
-                    if (c != null)
-                    {
-                        if (c is PC pc)
-                            emds.AddRange(pc.GetProfile(Context.Guild.Id, Context.User.Id, Context.Channel.Id, detailed.Equals("full", StringComparison.OrdinalIgnoreCase)));
-                        else if (c is NPC npc)
-                            emds.AddRange(npc.GetProfile(Context.Guild.Id, Context.User.Id, Context.Channel.Id, detailed.Equals("full", StringComparison.OrdinalIgnoreCase)));
-                    }
-
-                    foreach (var e in emds) await ReplyAsync("", false, e);
-                    await Context.Channel.DeleteMessageAsync(Context.Message);
+                    if (c is PC pc)
+                        emds.AddRange(pc.GetProfile(Context.Guild.Id, Context.User.Id, Context.Channel.Id, detailed.Equals("full", StringComparison.OrdinalIgnoreCase)));
+                    else if (c is NPC npc)
+                        emds.AddRange(npc.GetProfile(Context.Guild.Id, Context.User.Id, Context.Channel.Id, detailed.Equals("full", StringComparison.OrdinalIgnoreCase)));
+                } else
+                {
+                    await ReplyAsync($"No character found with name or alias '{nameOrAlias}'");
                 }
-                catch (Exception e)
+
+                foreach (var e in emds) await ReplyAsync("", false, e);
+                await Context.Channel.DeleteMessageAsync(Context.Message);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Exception: {e.Message}: {e.StackTrace}");
+                var inner = e.InnerException;
+                while (inner != null)
                 {
-                    Console.WriteLine($"Exception: {e.Message}: {e.StackTrace}");
-                    var inner = e.InnerException;
-                    while (inner != null)
-                    {
-                        Console.WriteLine($"Inner Exception:\n{inner.Message}: {inner.StackTrace}");
-                        inner = inner.InnerException;
-                    }
+                    Console.WriteLine($"Inner Exception:\n{inner.Message}: {inner.StackTrace}");
+                    inner = inner.InnerException;
                 }
             }
         }
