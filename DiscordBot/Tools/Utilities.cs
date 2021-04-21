@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Discord;
-using EmeraldBot.Model;
-using EmeraldBot.Model.Servers;
+using AvatarBot.Model;
+using AvatarBot.Model.Servers;
 
-namespace EmeraldBot.Bot.Tools
+namespace AvatarBot.Bot.Tools
 {
     public class PrivateCharacter {
         public Model.Characters.Character Character { get; set; }

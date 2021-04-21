@@ -1,12 +1,12 @@
-﻿using EmeraldBot.Model.Characters;
-using EmeraldBot.Model.Identity;
+﻿using AvatarBot.Model.Characters;
+using AvatarBot.Model.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace EmeraldBot.Model.Servers
+namespace AvatarBot.Model.Servers
 {
     public class Server
     {
@@ -23,7 +23,10 @@ namespace EmeraldBot.Model.Servers
         [MaxLength(1)]
         public string Prefix { get; set; } = "!";
 
-        public long DiceChannelID { get; set; } = 0;
+        [Required]
+        [RegularExpression(@"^[a-z]{2}$", ErrorMessage = "Localization must be a two characters code")]
+        [MaxLength(2)]
+        public string Localization { get; set; } = "en";
 
         public virtual ICollection<Character> Characters { get; set; }
         public virtual ICollection<DefaultCharacter> DefaultCharacters { get; set; }

@@ -1,9 +1,9 @@
 ﻿using Discord;
 using Discord.Commands;
-using EmeraldBot.Bot.Displays;
-using EmeraldBot.Bot.Tools;
-using EmeraldBot.Model;
-using EmeraldBot.Model.Characters;
+using AvatarBot.Bot.Displays;
+using AvatarBot.Bot.Tools;
+using AvatarBot.Model;
+using AvatarBot.Model.Characters;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace EmeraldBot.Bot.Modules
+namespace AvatarBot.Bot.Modules
 {
     public class PrintAndList : ModuleBase<SocketCommandContext>
     {
@@ -29,6 +29,7 @@ namespace EmeraldBot.Bot.Modules
         {
             filter = filter.ToLower().Trim();
             using var ctx = new AvatarBotContext();
+            var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
             try
             {
                 List<string> msg;
@@ -39,11 +40,11 @@ namespace EmeraldBot.Bot.Modules
                     case "mycharacters": msg = PrintListCharacters(filter, 0); break;
                     case "characters": msg = PrintListCharacters(filter, 1); break;
                     case "allcharacters": msg = PrintListCharacters(filter, 2); break;
-                    default: throw new System.Exception($"Unknown command '{type}'.");
+                    default: throw new System.Exception(Localization.Format(server.Localization, "unknown_command", type));
                 }
                 if (msg.Count == 0)
                 {
-                    await ReplyAsync($"No character found.");
+                    await ReplyAsync(Localization.Format(server.Localization, "no_character_found"));
                 }
                 else
                 {
@@ -53,7 +54,7 @@ namespace EmeraldBot.Bot.Modules
             }
             catch (Exception e)
             {
-                await ReplyAsync(e.Message);
+                await ReplyAsync(Localization.Format(server.Localization, "list_failed", e.Message));
                 Console.WriteLine($"Exception: {e.Message}:\n{e.StackTrace}");
             }
         }
@@ -66,6 +67,8 @@ namespace EmeraldBot.Bot.Modules
             {
                 var player = ctx.Users.Single(x => x.DiscordID == (long)Context.User.Id);
                 var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
+                msg.Add(GetListHeader(filter, detailLevel));
+
                 List<PC> pcs = ctx.Characters.OfType<PC>().Where(x => x.Server.DiscordID == (long)Context.Guild.Id
                                                           && (filter.Equals("") || x.Name.Contains(filter) || x.Alias.Contains(filter))
                                                           && (x.Hidden == false || ctx.HasPrivilege(server.ID, player.ID))).ToList();
@@ -82,6 +85,24 @@ namespace EmeraldBot.Bot.Modules
                 }
             }
             return msg;
+        }
+
+        private string GetListHeader(string filter, int detailLevel)
+        {
+            using var ctx = new AvatarBotContext();
+            var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
+            if (filter == "")
+            {
+                if (detailLevel == 0) return Localization.Format(server.Localization, "mycharacters_header");
+                else if (detailLevel == 1) return Localization.Format(server.Localization, "characters_header");
+                else if (detailLevel == 2) return Localization.Format(server.Localization, "allcharacters_header");
+            } else
+            {
+                if (detailLevel == 0) return Localization.Format(server.Localization, "mycharacters_header_filter", filter);
+                else if (detailLevel == 1) return Localization.Format(server.Localization, "characters_header_filter", filter);
+                else if (detailLevel == 2) return Localization.Format(server.Localization, "allcharacters_header_filter", filter);
+            }
+            throw new Exception("logic error in list header");
         }
 
         [Command("print")]
@@ -112,7 +133,7 @@ namespace EmeraldBot.Bot.Modules
                         emds.AddRange(npc.GetProfile(Context.Guild.Id, Context.User.Id, Context.Channel.Id, detailed.Equals("full", StringComparison.OrdinalIgnoreCase)));
                 } else
                 {
-                    await ReplyAsync($"No character found with name or alias '{nameOrAlias}'");
+                    await ReplyAsync(Localization.Format(server.Localization, "characters_header", nameOrAlias));
                 }
 
                 foreach (var e in emds) await ReplyAsync("", false, e);

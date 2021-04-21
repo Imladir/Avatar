@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <RootNamespace>EmeraldBot.Model</RootNamespace>
+    <RootNamespace>AvatarBot.Model</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace EmeraldBot.Model.Migrations
+namespace AvatarBot.Model.Migrations
 {
     public partial class InitialMigration : Migration
     {

@@ -5,14 +5,14 @@ using System;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.Collections.Generic;
-using EmeraldBot.Model;
+using AvatarBot.Model;
 using System.Linq;
-using EmeraldBot.Bot.Tools.ParamReaders;
-using EmeraldBot.Model.Servers;
-using EmeraldBot.Model.Characters;
-using EmeraldBot.Model.Identity;
+using AvatarBot.Bot.Tools.ParamReaders;
+using AvatarBot.Model.Servers;
+using AvatarBot.Model.Characters;
+using AvatarBot.Model.Identity;
 
-namespace EmeraldBot.Bot.Tools
+namespace AvatarBot.Bot.Tools
 {
     public class CommandHandler
     {

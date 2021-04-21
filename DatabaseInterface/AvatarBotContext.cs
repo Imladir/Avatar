@@ -1,5 +1,5 @@
-﻿using EmeraldBot.Model.Servers;
-using EmeraldBot.Model.Characters;
+﻿using AvatarBot.Model.Servers;
+using AvatarBot.Model.Characters;
 using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
@@ -12,10 +12,10 @@ using System.Text.RegularExpressions;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using GenericServices;
 using System.Collections;
-using EmeraldBot.Model.Identity;
+using AvatarBot.Model.Identity;
 using Microsoft.AspNetCore.Identity;
 
-namespace EmeraldBot.Model
+namespace AvatarBot.Model
 {
     public class AvatarBotContext : DbContext
     {
@@ -55,7 +55,7 @@ namespace EmeraldBot.Model
 
         static AvatarBotContext()
         {
-            //Database.SetInitializer(new MigrateDatabaseToLatestVersion<EmeraldBotContext, AvatarBotInitializer>());
+            //Database.SetInitializer(new MigrateDatabaseToLatestVersion<AvatarBotContext, AvatarBotInitializer>());
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -298,7 +298,7 @@ namespace EmeraldBot.Model
         {
             try
             {
-                Server server = new Server() { Prefix = "!", DiscordID = 0, DiceChannelID = 0, Name = "Game Data Server" };
+                Server server = new Server() { Prefix = "!", DiscordID = 0, Name = "Game Data Server" };
                 Servers.Add(server);
                 SaveChanges();
 

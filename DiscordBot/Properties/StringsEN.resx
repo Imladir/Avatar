@@ -117,7 +117,112 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="not_done" xml:space="preserve">
-    <value>Not done yet</value>
+  <data name="allcharacters_header" xml:space="preserve">
+    <value>Characters:</value>
+  </data>
+  <data name="allcharacters_header_filter" xml:space="preserve">
+    <value>Characters matching filter '{0}'</value>
+  </data>
+  <data name="bot_verbose" xml:space="preserve">
+    <value>The bot verbose status (for you only) has been set to {0}.</value>
+  </data>
+  <data name="bot_verbose_error" xml:space="preserve">
+    <value>Couldn't change verbose status: {0}.</value>
+  </data>
+  <data name="characters_header" xml:space="preserve">
+    <value>Default characters:</value>
+  </data>
+  <data name="characters_header_filter" xml:space="preserve">
+    <value>Default characters matching filter '{0}'</value>
+  </data>
+  <data name="character_created" xml:space="preserve">
+    <value>{0} has been succesfully created.</value>
+  </data>
+  <data name="character_creation_failed" xml:space="preserve">
+    <value>Couldn't create the character: {0}.</value>
+  </data>
+  <data name="character_default_failed" xml:space="preserve">
+    <value>Couldn't set '{0}' as default character: {1}.</value>
+  </data>
+  <data name="character_default_set" xml:space="preserve">
+    <value>{0} has been set as your default character.</value>
+  </data>
+  <data name="character_not_found" xml:space="preserve">
+    <value>No character found with name or alias '{0}'.</value>
+  </data>
+  <data name="character_update_failed" xml:space="preserve">
+    <value>Couldn't update the character: {0}.</value>
+  </data>
+  <data name="character_update_incomplete" xml:space="preserve">
+    <value>Some errors occured while updating {0}:\n{1}\nThe rest (if anything) was saved.</value>
+  </data>
+  <data name="command_help" xml:space="preserve">
+    <value>Help for command **{0}{1}**\n\nAliases:</value>
+  </data>
+  <data name="command_not_found" xml:space="preserve">
+    <value>Sorry, I couldn't find a command like **{0}**.</value>
+  </data>
+  <data name="command_parameters" xml:space="preserve">
+    <value>Parameters: {}: {}\n</value>
+  </data>
+  <data name="command_summary" xml:space="preserve">
+    <value>Summary: {0}\n\n</value>
+  </data>
+  <data name="gm_add" xml:space="preserve">
+    <value>'{0}' is now a GM on the server.</value>
+  </data>
+  <data name="gm_already" xml:space="preserve">
+    <value>'{0}' is already a GM on the server.</value>
+  </data>
+  <data name="gm_not" xml:space="preserve">
+    <value>'{0}' is not a GM on the server.</value>
+  </data>
+  <data name="gm_removed" xml:space="preserve">
+    <value>'{0}' is not a GM on the server anymore.</value>
+  </data>
+  <data name="help_header" xml:space="preserve">
+    <value>Commands available for the bot. To get more details about command *cmd*, type **{0}help cmd**.</value>
+  </data>
+  <data name="list_failed" xml:space="preserve">
+    <value>Failed to retrieve characters list: {0}.</value>
+  </data>
+  <data name="local_changed" xml:space="preserve">
+    <value>Localization changed to '{0}'.</value>
+  </data>
+  <data name="local_too_long" xml:space="preserve">
+    <value>Failed to change localization to '{0}': code must be two characters long.</value>
+  </data>
+  <data name="message_edit_error" xml:space="preserve">
+    <value>Couldn't edit message: {0}.</value>
+  </data>
+  <data name="message_send_error" xml:space="preserve">
+    <value>Couldn't send message: {0}.</value>
+  </data>
+  <data name="mycharacters_header" xml:space="preserve">
+    <value>Characters belonging to you:</value>
+  </data>
+  <data name="mycharacters_header_filter" xml:space="preserve">
+    <value>Characters belonging to you maching filter '{0}':</value>
+  </data>
+  <data name="no_character_found" xml:space="preserve">
+    <value>No character found.</value>
+  </data>
+  <data name="prefix_changed" xml:space="preserve">
+    <value>Prefix has been changed to '{0}'.</value>
+  </data>
+  <data name="prefix_failed" xml:space="preserve">
+    <value>Failed to change prefix to '{0}': too many possible conflicts.</value>
+  </data>
+  <data name="private_channel_failed" xml:space="preserve">
+    <value>Couldn't set #{0} as your private channel: {1}.</value>
+  </data>
+  <data name="private_channel_set" xml:space="preserve">
+    <value>#{0} has been set as your private channel.</value>
+  </data>
+  <data name="property_set_error" xml:space="preserve">
+    <value>Couldn't set '{0}' with value '{1}'.</value>
+  </data>
+  <data name="unknown_command" xml:space="preserve">
+    <value>Unknown command '{0}'.</value>
   </data>
 </root>

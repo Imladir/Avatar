@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AvatarBot.Model.Migrations
 {
     [DbContext(typeof(AvatarBotContext))]
-    [Migration("20210421175754_HiddenCharacters")]
-    partial class HiddenCharacters
+    [Migration("20210421204136_Localization")]
+    partial class Localization
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -247,9 +247,11 @@ namespace AvatarBot.Model.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("DiceChannelID");
-
                     b.Property<long>("DiscordID");
+
+                    b.Property<string>("Localization")
+                        .IsRequired()
+                        .HasMaxLength(2);
 
                     b.Property<string>("Name");
 

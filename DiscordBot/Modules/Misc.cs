@@ -1,10 +1,10 @@
 ﻿using Discord;
 using Discord.Commands;
-using EmeraldBot.Bot.Tools;
-using EmeraldBot.Model;
-using EmeraldBot.Model.Characters;
-using EmeraldBot.Model.Identity;
-using EmeraldBot.Model.Servers;
+using AvatarBot.Bot.Tools;
+using AvatarBot.Model;
+using AvatarBot.Model.Characters;
+using AvatarBot.Model.Identity;
+using AvatarBot.Model.Servers;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -15,7 +15,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace EmeraldBot.Bot.Modules
+namespace AvatarBot.Bot.Modules
 {
     public class Misc : ModuleBase<SocketCommandContext>
     {
@@ -29,9 +29,12 @@ namespace EmeraldBot.Bot.Modules
         {
 
             char prefix = ' ';
+            string localization = "";
             using (var ctx = new AvatarBotContext())
             {
-                prefix = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id).Prefix[0];
+                var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
+                prefix = server.Prefix[0];
+                localization = server.Localization;
             }
 
             if (command == "")
@@ -39,7 +42,7 @@ namespace EmeraldBot.Bot.Modules
                 var builder = new EmbedBuilder
                 {
                     Color = new Color(114, 137, 218),
-                    Description = "Commands available for the bot. To get more details about command *cmd*, type **!help cmd**"
+                    Description = Localization.Format(localization, "help_header", prefix)
                 };
 
                 foreach (var module in _service.Modules)
@@ -69,14 +72,14 @@ namespace EmeraldBot.Bot.Modules
                 var result = _service.Search(Context, command);
                 if (!result.IsSuccess)
                 {
-                    await ReplyAsync($"Sorry, I couldn't find a command like **{command}**.");
+                    await ReplyAsync(Localization.Format(localization, "command_not_found", command));
                     return;
                 }
 
                 var builder = new EmbedBuilder
                 {
                     Color = new Color(114, 137, 218),
-                    Description = $"Help for command **{prefix}{command}**\n\nAliases: "
+                    Description = Localization.Format(localization, "command_help", prefix, command)
                 };
 
                 foreach (var match in result.Commands)
@@ -86,8 +89,8 @@ namespace EmeraldBot.Bot.Modules
                     {
                         x.Name = string.Join(", ", cmd.Aliases);
                         x.Value =
-                            $"Summary: {cmd.Summary}\n\n" +
-                            $"Parameters: {string.Join(", ", cmd.Parameters.Select(p => p.Name))}: {string.Join("", cmd.Parameters.Select(p => p.Summary))}\n";
+                            Localization.Format(localization, "command_summary", cmd.Summary) +
+                            Localization.Format(localization, "command_parameters", string.Join(", ", cmd.Parameters.Select(p => p.Name)), string.Join("", cmd.Parameters.Select(p => p.Summary)));
                         x.IsInline = false;
                     });
                 }
@@ -95,13 +98,14 @@ namespace EmeraldBot.Bot.Modules
             }
         }
 
-        [RequireOwner]
-        [Command("seed")]
-        public async Task Seed()
-        {
-            using var ctx = new AvatarBotContext();
-            ctx.Seed();
-            await ReplyAsync("Database has been seeded");
-        }
+        //[RequireOwner]
+        //[Command("seed")]
+        //[Summary("Seeds the database.")]
+        //public async Task Seed()
+        //{
+        //    using var ctx = new AvatarBotContext();
+        //    ctx.Seed();
+        //    await ReplyAsync("Database has been seeded");
+        //}
     }
 }

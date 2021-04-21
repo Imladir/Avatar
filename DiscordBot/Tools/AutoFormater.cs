@@ -1,10 +1,10 @@
 ﻿using Discord;
-using EmeraldBot.Model;
+using AvatarBot.Model;
 using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace EmeraldBot.Bot.Tools
+namespace AvatarBot.Bot.Tools
 {
     class AutoFormater
     {

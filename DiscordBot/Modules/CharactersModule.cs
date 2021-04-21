@@ -1,15 +1,15 @@
 ﻿using Discord;
 using Discord.Commands;
-using EmeraldBot.Bot.Tools;
-using EmeraldBot.Model;
-using EmeraldBot.Model.Characters;
+using AvatarBot.Bot.Tools;
+using AvatarBot.Model;
+using AvatarBot.Model.Characters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace EmeraldBot.Bot.Modules
+namespace AvatarBot.Bot.Modules
 {
     public class Characters : ModuleBase<SocketCommandContext>
     {
@@ -24,10 +24,10 @@ namespace EmeraldBot.Bot.Modules
         {
             using var ctx = new AvatarBotContext();
             using var dbTransaction = ctx.Database.BeginTransaction();
+            var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
             try
             {
                 var player = ctx.Users.Single(x => x.DiscordID == (long)Context.User.Id);
-                var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
                 var newChar = new PC()
                 {
                     Alias = alias,
@@ -40,7 +40,7 @@ namespace EmeraldBot.Bot.Modules
                 // Users can't have hidden characters
                 if (!ctx.HasPrivilege(server.ID, player.ID)) options.Params["hidden"] = "false";
                 var msg = UpdateChar(ctx, newChar, options.Params);
-                if (msg == "") msg = $"{newChar.Name} has been succesfully created.";
+                if (msg == "") msg = Localization.Format(server.Localization, "character_created", newChar.Name);
                 ctx.SaveChanges();
                 dbTransaction.Commit();
                 await ReplyAsync(msg);
@@ -49,7 +49,7 @@ namespace EmeraldBot.Bot.Modules
             catch (Exception e)
             {
                 dbTransaction.Rollback();
-                await ReplyAsync($"Couldn't create the character: {e.Message}");
+                await ReplyAsync(Localization.Format(server.Localization, "character_creation_failed", e.Message));
                 Console.WriteLine($"{e.Message}\n{e.StackTrace}");
             }
         }
@@ -65,6 +65,7 @@ namespace EmeraldBot.Bot.Modules
         {
             using var ctx = new AvatarBotContext();
             using var dbTransaction = ctx.Database.BeginTransaction();
+            var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
             try
             {
                 // It's an update, I better load everything I can
@@ -72,7 +73,6 @@ namespace EmeraldBot.Bot.Modules
                 //options.Target.FullLoad(ctx);
 
                 var player = ctx.Users.Single(x => x.DiscordID == (long)Context.User.Id);
-                var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
                 if (!ctx.HasPrivilege(server.ID, player.ID)) options.Params["hidden"] = "false";
                 var msg = UpdateChar(ctx, options.Target, options.Params);
                 if (msg == "") msg = $"{options.Target.Name} has been succesfully updated.";
@@ -84,22 +84,23 @@ namespace EmeraldBot.Bot.Modules
             catch (Exception e)
             {
                 dbTransaction.Rollback();
-                await ReplyAsync($"Couldn't update the character: {e.Message}");
+                await ReplyAsync(Localization.Format(server.Localization, "character_update_failed", e.Message));
                 Console.WriteLine($"{e.Message}\n{e.StackTrace}");
             }
         }
 
         private string UpdateChar(AvatarBotContext ctx, Character target, Dictionary<string, string> dic)
         {
+            var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
             string msg = "";
             List<string> errors = new List<string>();
 
             foreach (var kv in dic)
             {
-                if (!target.UpdateField(ctx, kv.Key, kv.Value)) errors.Add($"Couldn't set {kv.Key} with value {kv.Value}");
+                if (!target.UpdateField(ctx, kv.Key, kv.Value)) errors.Add(Localization.Format(server.Localization, "property_set_error", kv.Key, kv.Value));
             }
 
-            if (errors.Count != 0) msg = $"Some errors occured while updating {target.Name}:\n" + String.Join("\n", errors) + "\nThe rest (if anything) was saved.";
+            if (errors.Count != 0) msg = Localization.Format(server.Localization, "character_update_incomplete", target.Name, String.Join("\n", errors));
             return msg;
         }
 

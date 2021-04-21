@@ -1,11 +1,11 @@
 ﻿using Discord;
 using Discord.Commands;
-using EmeraldBot.Model;
+using AvatarBot.Model;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EmeraldBot.Bot.Tools
+namespace AvatarBot.Bot.Tools
 {
     class RequireGMAttribute : PreconditionAttribute
     {

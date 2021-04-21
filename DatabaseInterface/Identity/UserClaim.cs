@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Claims;
 using System.Text;
 
-namespace EmeraldBot.Model.Identity
+namespace AvatarBot.Model.Identity
 {
     public class UserClaim
     {

@@ -1,10 +1,10 @@
 ﻿using Discord.Commands;
-using EmeraldBot.Model;
-using EmeraldBot.Model.Characters;
+using AvatarBot.Model;
+using AvatarBot.Model.Characters;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EmeraldBot.Bot.Tools
+namespace AvatarBot.Bot.Tools
 {
     public class CommandOptions<T> where T: Character
     {

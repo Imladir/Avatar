@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
-    <RootNamespace>EmeraldBot.Bot</RootNamespace>
+    <RootNamespace>AvatarBot.Bot</RootNamespace>
     <UserSecretsId>086ed3d2-0e9e-4cee-b64e-99f30937a9a5</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
@@ -30,16 +30,25 @@
     <ProjectReference Include="..\DatabaseInterface\DatabaseInterface.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Properties\Strings.en.Designer.cs">
+    <Compile Update="Properties\StringsEN.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>strings.en.resx</DependentUpon>
+      <DependentUpon>StringsEN.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\StringsFR.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>StringsFR.resx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Properties\strings.en.resx">
+    <EmbeddedResource Update="Properties\StringsEN.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.en.Designer.cs</LastGenOutput>
+      <LastGenOutput>StringsEN.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\StringsFR.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>StringsFR.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 </Project>

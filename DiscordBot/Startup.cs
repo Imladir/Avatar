@@ -1,4 +1,4 @@
-﻿using EmeraldBot.Model;
+﻿using AvatarBot.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 
-namespace EmeraldBot.Bot
+namespace AvatarBot.Bot
 {
     public class Startup
     {

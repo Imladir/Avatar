@@ -1,9 +1,9 @@
-﻿using EmeraldBot.Model.Servers;
+﻿using AvatarBot.Model.Servers;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace EmeraldBot.Model.Identity
+namespace AvatarBot.Model.Identity
 {
     public class UserRole
     {

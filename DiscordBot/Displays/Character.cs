@@ -1,15 +1,15 @@
 ﻿using Discord;
 using Discord.Commands;
-using EmeraldBot.Bot.Tools;
-using EmeraldBot.Model;
-using EmeraldBot.Model.Characters;
+using AvatarBot.Bot.Tools;
+using AvatarBot.Model;
+using AvatarBot.Model.Characters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EmeraldBot.Bot.Displays
+namespace AvatarBot.Bot.Displays
 {
     public static class Display
     {

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EmeraldBot.Model.Characters
+namespace AvatarBot.Model.Characters
 {
     [Table("NonPlayerCharacters")]
     public class NPC : Character

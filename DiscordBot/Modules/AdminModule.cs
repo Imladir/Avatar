@@ -1,15 +1,15 @@
 ﻿using Discord;
 using Discord.Commands;
-using EmeraldBot.Bot.Tools;
-using EmeraldBot.Model;
-using EmeraldBot.Model.Identity;
-using EmeraldBot.Model.Servers;
+using AvatarBot.Bot.Tools;
+using AvatarBot.Model;
+using AvatarBot.Model.Identity;
+using AvatarBot.Model.Servers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EmeraldBot.Bot.Modules
+namespace AvatarBot.Bot.Modules
 {
     [Group("admin")]
     public class Admin : ModuleBase<SocketCommandContext>
@@ -31,7 +31,7 @@ namespace EmeraldBot.Bot.Modules
 
                     using var ctx = new AvatarBotContext();
                     var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
-                    if (server.IsGM(ctx, newGM.Id)) throw new Exception($"{newGM.Nickname} is already a GM on the server.");
+                    if (server.IsGM(ctx, newGM.Id)) throw new Exception(Localization.Format(server.Localization, "gm_already", newGM.Nickname));
 
                     var player = ctx.Users.SingleOrDefault(x => x.DiscordID == (long)newGM.Id);
                     if (player == null)
@@ -40,7 +40,7 @@ namespace EmeraldBot.Bot.Modules
                     player.Roles.Add(new UserRole() { User = player, Role = ctx.Roles.Single(x => x.Name.Equals("GM")), Server = server });
                     player.Claims.Add(new UserClaim() { User = player, ClaimType = $"Server-{server.DiscordID}", ClaimValue = "GM" });
                     ctx.SaveChanges();
-                    await ReplyAsync($"{newGM.Nickname} is now a GM on the server.");
+                    await ReplyAsync(Localization.Format(server.Localization, "gm_added", newGM.Nickname));
 
                 }
                 catch (Exception e)
@@ -65,7 +65,7 @@ namespace EmeraldBot.Bot.Modules
                     using (var ctx = new AvatarBotContext())
                     {
                         var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
-                        if (!server.IsGM(ctx, gm.Id)) throw new Exception($"{gm.Nickname} is not a GM on the server.");
+                        if (!server.IsGM(ctx, gm.Id)) throw new Exception(Localization.Format(server.Localization, "gm_not", gm.Nickname));
 
                         var player = ctx.Users.SingleOrDefault(x => x.DiscordID == (long)gm.Id);
 
@@ -79,8 +79,36 @@ namespace EmeraldBot.Bot.Modules
                         var claim = player.Claims.Single(x => x.ClaimType.Equals($"Server-{server.DiscordID}") && x.ClaimValue.Equals(roleQuery.Single().Role.Name));
                         player.Claims.Remove(claim);
                         ctx.SaveChanges();
-                        await ReplyAsync($"{gm.Nickname} is no longer a GM on the server.");
+                        await ReplyAsync(Localization.Format(server.Localization, "gm_removed", gm.Nickname));
                     }
+                }
+                catch (Exception e)
+                {
+                    await ReplyAsync(e.Message);
+                    Console.WriteLine($"Exception: {e.Message}:\n{e.StackTrace}");
+                }
+            }
+        }
+
+        [RequireOwner(Group = "Permission")]
+        [RequireUserPermission(GuildPermission.Administrator, Group = "Permission")]
+        [Command("setlocalization")]
+        [Summary("Changes the localization for the bot's messages")]
+        public async Task ChangeLocalization([Summary("New prefix for the bot's commands")]
+                                             string local)
+        {
+            using (var ctx = new AvatarBotContext())
+            {
+                var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
+                try
+                {
+                    local = local.ToLower();
+                    if (local.Length != 2)
+                        throw new Exception(Localization.Format(server.Localization, "local_too_long", local));
+
+                    server.Localization = local;
+                    ctx.SaveChanges();
+                    await ReplyAsync(Localization.Format(server.Localization, "local_changed", local));
                 }
                 catch (Exception e)
                 {
@@ -99,15 +127,15 @@ namespace EmeraldBot.Bot.Modules
         {
             using (var ctx = new AvatarBotContext())
             {
+                var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
                 try
                 {
                     if (prefix == '@' || prefix == '#')
-                        throw new Exception($"Impossible to set the prefix to {prefix}: too many possible conflicts.");
+                        throw new Exception(Localization.Format(server.Localization, "prefix_failed", prefix));
 
-                    var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
                     server.Prefix = $"{prefix}";
                     ctx.SaveChanges();
-                    await ReplyAsync($"The prefix has been changed to {prefix}");
+                    await ReplyAsync(Localization.Format(server.Localization, "prefix_changed", prefix));
                 }
                 catch (Exception e)
                 {

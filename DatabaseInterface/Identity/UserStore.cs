@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace EmeraldBot.Model.Identity
+namespace AvatarBot.Model.Identity
 {
     public class UserStore : IUserStore<User>, IUserPasswordStore<User>, IUserClaimStore<User>
     {

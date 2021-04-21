@@ -1,5 +1,5 @@
-﻿using EmeraldBot.Model.Identity;
-using EmeraldBot.Model.Servers;
+﻿using AvatarBot.Model.Identity;
+using AvatarBot.Model.Servers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EmeraldBot.Model.Characters
+namespace AvatarBot.Model.Characters
 {
     [Table("PlayerCharacters")]
     public class PC : Character

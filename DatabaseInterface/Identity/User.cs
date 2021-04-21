@@ -1,5 +1,5 @@
-﻿using EmeraldBot.Model.Characters;
-using EmeraldBot.Model.Servers;
+﻿using AvatarBot.Model.Characters;
+using AvatarBot.Model.Servers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,7 +11,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EmeraldBot.Model.Identity
+namespace AvatarBot.Model.Identity
 {
     public class User
     {

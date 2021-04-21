@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace EmeraldBot.Bot.Tools.ParamReaders
+namespace AvatarBot.Bot.Tools.ParamReaders
 {
 
     public class IntListReader : TypeReader

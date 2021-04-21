@@ -1,9 +1,9 @@
 ﻿using Discord;
 using Discord.Commands;
-using EmeraldBot.Bot.Tools;
-using EmeraldBot.Model;
-using EmeraldBot.Model.Characters;
-using EmeraldBot.Model.Servers;
+using AvatarBot.Bot.Tools;
+using AvatarBot.Model;
+using AvatarBot.Model.Characters;
+using AvatarBot.Model.Servers;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
@@ -11,7 +11,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace EmeraldBot.Bot.Modules
+namespace AvatarBot.Bot.Modules
 {
     public class AutoFormat : ModuleBase<SocketCommandContext>
     {
@@ -19,25 +19,27 @@ namespace EmeraldBot.Bot.Modules
         [Summary("Formats a message so that it can be displayed as in-character")]
         public async Task Say([Summary("The text to format, with an optional parameter or $alias")] [Remainder] CommandOptions<PC> options)
         {
-            try
-            {
-                if (options.Target == null)
+            using (var ctx = new AvatarBotContext()) {
+                var server = ctx.Servers.SingleOrDefault(x => x.DiscordID == (long)Context.Guild.Id);
+                try
                 {
-                    throw new Exception($"target character not found: doesn't exist or you don't have the rights for it?");
+                    if (options.Target == null)
+                    {
+                        throw new Exception($"target character not found: doesn't exist or you don't have the rights for it?");
+                    }
+                    var msg = await Talk(options.Target, options.Text);
+                    ctx.Messages.Add(msg);
+                    msg.Server = server;
+                    msg.Player = ctx.Users.SingleOrDefault(x => x.DiscordID == (long)Context.User.Id);
+                    ctx.Entry(msg.Player).State = EntityState.Unchanged;
+                    ctx.Entry(msg.Server).State = EntityState.Unchanged;
+                    ctx.SaveChanges();
                 }
-                var msg = await Talk(options.Target, options.Text);
-                using var ctx = new AvatarBotContext();
-                ctx.Messages.Add(msg);
-                msg.Server = ctx.Servers.SingleOrDefault(x => x.DiscordID == (long)Context.Guild.Id);
-                msg.Player = ctx.Users.SingleOrDefault(x => x.DiscordID == (long)Context.User.Id);
-                ctx.Entry(msg.Player).State = EntityState.Unchanged;
-                ctx.Entry(msg.Server).State = EntityState.Unchanged;
-                ctx.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                await ReplyAsync($"Couldn't send message: {e.Message}");
-                Console.WriteLine($"{e.Message}\n{e.StackTrace}");
+                catch (Exception e)
+                {
+                    await ReplyAsync(Localization.Format(server.Localization, "message_send_error", e.Message));
+                    Console.WriteLine($"{e.Message}\n{e.StackTrace}");
+                }
             }
         }
 
@@ -51,23 +53,26 @@ namespace EmeraldBot.Bot.Modules
                                            "- **icon=\"xxx.jpg\"**: must be a valid URL of an image (the actual image, not a page containing the image) and will display it instead of the clan mon.")]
                                   CommandOptions<Character> options)
         {
-            using var ctx = new AvatarBotContext();
-            try
+            using (var ctx = new AvatarBotContext())
             {
-                var target = new PC();
-                target.Update(ctx, options.Params);
+                var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
+                try
+                {
+                    var target = new PC();
+                    target.Update(ctx, options.Params);
 
-                var msg = await Talk(target, options.Text);
+                    var msg = await Talk(target, options.Text);
 
-                msg.Server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
-                msg.Player = ctx.Users.Single(x => x.DiscordID == (long)Context.User.Id);
-                ctx.Messages.Add(msg);
-                ctx.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                await ReplyAsync($"Couldn't send message: {e.Message}");
-                Console.WriteLine($"{e.Message}\n{e.StackTrace}");
+                    msg.Server = server;
+                    msg.Player = ctx.Users.Single(x => x.DiscordID == (long)Context.User.Id);
+                    ctx.Messages.Add(msg);
+                    ctx.SaveChanges();
+                }
+                catch (Exception e)
+                {
+                    await ReplyAsync(Localization.Format(server.Localization, "message_send_error", e.Message));
+                    Console.WriteLine($"{e.Message}\n{e.StackTrace}");
+                }
             }
         }
 
@@ -103,28 +108,31 @@ namespace EmeraldBot.Bot.Modules
                                           [Summary("The new text replacing the old one.")]
                                           string data)
         {
-            using var ctx = new AvatarBotContext();
-            try
+            using (var ctx = new AvatarBotContext())
             {
-                var message = ctx.Messages.Where(x => x.DiscordChannelID == (long)Context.Channel.Id
-                                                   && x.Server.DiscordID == (long)Context.Guild.Id
-                                                   && x.Player.DiscordID == (long)Context.User.Id)
-                                          .OrderByDescending(x => x.LastUpdated).FirstOrDefault();
+                var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
+                try
+                {
+                    var message = ctx.Messages.Where(x => x.DiscordChannelID == (long)Context.Channel.Id
+                                                       && x.Server.DiscordID == (long)Context.Guild.Id
+                                                       && x.Player.DiscordID == (long)Context.User.Id)
+                                              .OrderByDescending(x => x.LastUpdated).FirstOrDefault();
 
-                if (message == null) return;
+                    if (message == null) return;
 
-                message.Text = AutoFormater.SimpleFormat(data);
+                    message.Text = AutoFormater.SimpleFormat(data);
 
-                IUserMessage msg = (IUserMessage)await Context.Channel.GetMessageAsync((ulong)message.DiscordMessageID);
-                await msg.ModifyAsync(x => x.Embed = message.ToEmbed());
-                message.LastUpdated = DateTime.UtcNow;
-                ctx.SaveChanges();
-                await Context.Channel.DeleteMessageAsync(Context.Message);
-            }
-            catch (Exception e)
-            {
-                await ReplyAsync($"Couldn't edit message: {e.Message}");
-                Console.WriteLine($"{e.Message}\n{e.StackTrace}");
+                    IUserMessage msg = (IUserMessage)await Context.Channel.GetMessageAsync((ulong)message.DiscordMessageID);
+                    await msg.ModifyAsync(x => x.Embed = message.ToEmbed());
+                    message.LastUpdated = DateTime.UtcNow;
+                    ctx.SaveChanges();
+                    await Context.Channel.DeleteMessageAsync(Context.Message);
+                }
+                catch (Exception e)
+                {
+                    await ReplyAsync(Localization.Format(server.Localization, "message_edit_error", e.Message));
+                    Console.WriteLine($"{e.Message}\n{e.StackTrace}");
+                }
             }
         }
 

@@ -1,15 +1,15 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using EmeraldBot.Bot.Tools;
-using EmeraldBot.Model;
+using AvatarBot.Bot.Tools;
+using AvatarBot.Model;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace EmeraldBot.Bot
+namespace AvatarBot.Bot
 {
     class Program
     {
@@ -28,6 +28,9 @@ namespace EmeraldBot.Bot
                 Console.ReadLine();
                 return;
             }
+
+            /** Load the localization strings */
+            Localization.LoadData();
 
             /** Set the DB Context connection string **/
             var config = new ConfigurationBuilder()

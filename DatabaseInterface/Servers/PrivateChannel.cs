@@ -1,4 +1,4 @@
-﻿using EmeraldBot.Model.Identity;
+﻿using AvatarBot.Model.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EmeraldBot.Model.Servers
+namespace AvatarBot.Model.Servers
 {
     public class PrivateChannel
     {

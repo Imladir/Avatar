@@ -1,12 +1,12 @@
 ﻿using Discord.Commands;
-using EmeraldBot.Model;
+using AvatarBot.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace EmeraldBot.Bot.Tools.ParamReaders
+namespace AvatarBot.Bot.Tools.ParamReaders
 {
 
     public class CharacterReader : TypeReader

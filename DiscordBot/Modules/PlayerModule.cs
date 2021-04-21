@@ -1,12 +1,13 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using EmeraldBot.Model;
+using AvatarBot.Model;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AvatarBot.Bot.Tools;
 
-namespace EmeraldBot.Bot.Modules
+namespace AvatarBot.Bot.Modules
 {
     [Group("player")]
     public class Players : ModuleBase<SocketCommandContext>
@@ -20,6 +21,7 @@ namespace EmeraldBot.Bot.Modules
                                               string nameOrAlias)
         {
             using var ctx = new AvatarBotContext();
+            var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
             try
             {
                 var player = ctx.Users.Single(x => x.DiscordID == (long)Context.User.Id);
@@ -27,7 +29,7 @@ namespace EmeraldBot.Bot.Modules
                 var character = ctx.GetPlayerCharacter(Context.Guild.Id, Context.User.Id, nameOrAlias);
                 if (character == null)
                 {
-                    throw new Exception($"couldn't find character '{nameOrAlias}");
+                    throw new Exception(Localization.Format(server.Localization, "character_not_found", nameOrAlias));
                 }
                 var defChar = player.DefaultCharacters.SingleOrDefault(x => x.Server.DiscordID == (long)Context.Guild.Id);
                 if (defChar == null)
@@ -45,11 +47,11 @@ namespace EmeraldBot.Bot.Modules
                     defChar.Character = character;
                 }
                 ctx.SaveChanges();
-                await ReplyAsync($"{character.Name} has been set as your default character");
+                await ReplyAsync(Localization.Format(server.Localization, "character_default_set", character.Name));
             }
             catch (Exception e)
             {
-                await ReplyAsync($"Couldn't set '{nameOrAlias}' as default character: {e.Message}");
+                await ReplyAsync(Localization.Format(server.Localization, "character_default_failed", nameOrAlias, e.Message));
                 Console.WriteLine($"Couldn't set '{nameOrAlias}' as default character: {e.Message}\n{e.StackTrace}");
             }
         }
@@ -60,6 +62,7 @@ namespace EmeraldBot.Bot.Modules
         public async Task SetPrivateChannel()
         {
             using var ctx = new AvatarBotContext();
+            var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
             try
             {
                 var player = ctx.Users.Single(x => x.DiscordID == (long)Context.User.Id);
@@ -75,11 +78,11 @@ namespace EmeraldBot.Bot.Modules
                 else
                     privateChannel.ChannelDiscordID = (long)Context.Channel.Id;
                 ctx.SaveChanges();
-                await ReplyAsync($"#{Context.Channel.Name} has been set as your private channel");
+                await ReplyAsync(Localization.Format(server.Localization, "private_channel_set", Context.Channel.Name));
             }
             catch (Exception e)
             {
-                await ReplyAsync($"Couldn't set #{Context.Channel.Name} as your private channel: {e.Message}");
+                await ReplyAsync(Localization.Format(server.Localization, "private_channel_failed", Context.Channel.Name, e.Message));
                 Console.WriteLine($"Couldn't set #{Context.Channel.Name} as your private channel: {e.Message}\n{e.StackTrace}");
             }
         }
@@ -90,6 +93,7 @@ namespace EmeraldBot.Bot.Modules
         public async Task SetPrivateChannel([Summary("\nThe channel to define as your private channel.")] ISocketMessageChannel chan)
         {
             using var ctx = new AvatarBotContext();
+            var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
             try
             {
                 var player = ctx.Users.Single(x => x.DiscordID == (long)Context.User.Id);
@@ -105,11 +109,11 @@ namespace EmeraldBot.Bot.Modules
                 else
                     privateChannel.ChannelDiscordID = (long)chan.Id;
                 ctx.SaveChanges();
-                await ReplyAsync($"#{chan.Name} has been set as your private channel");
+                await ReplyAsync(Localization.Format(server.Localization, "private_channel_set", chan.Name));
             }
             catch (Exception e)
             {
-                await ReplyAsync($"Couldn't set #{chan.Name} as your private channel: {e.Message}");
+                await ReplyAsync(Localization.Format(server.Localization, "private_channel_failed", chan.Name, e.Message));
                 Console.WriteLine($"Couldn't set #{chan.Name} as your private channel: {e.Message}\n{e.StackTrace}");
             }
         }
@@ -120,18 +124,19 @@ namespace EmeraldBot.Bot.Modules
         public async Task SetVerbose()
         {
             using var ctx = new AvatarBotContext();
+            var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
             try
             {
                 var player = ctx.Users.Single(x => x.DiscordID == (long)Context.User.Id);
                 player.Verbose = !player.Verbose;
                 ctx.SaveChanges();
 
-                await ReplyAsync($"The bot verbose status (for you only) has been set to {(player.Verbose ? "Verbose" : "Silent")}");
+                await ReplyAsync(Localization.Format(server.Localization, "bot_verbose", player.Verbose ? "Verbose" : "Silent"));
             }
             catch (Exception e)
             {
-                await ReplyAsync($"Couldn't generate token: {e.Message}");
-                Console.WriteLine($"Couldn't generate token: {e.Message}\n{e.StackTrace}");
+                await ReplyAsync(Localization.Format(server.Localization, "bot_verbose_error", e.Message));
+                Console.WriteLine($"Couldn't change verbose status: {e.Message}\n{e.StackTrace}");
             }
         }
 
