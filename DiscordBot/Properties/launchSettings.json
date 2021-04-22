@@ -3,7 +3,6 @@
     "DiscordBot": {
       "commandName": "Project",
       "environmentVariables": {
-        "bot_token": "bot_token goes here for debug purposes",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }

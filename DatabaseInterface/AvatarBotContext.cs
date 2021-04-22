@@ -60,7 +60,6 @@ namespace AvatarBot.Model
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            ConnectionString = "Data Source=Arthemis;Initial Catalog=Avatar;Persist Security Info=True;User ID=AvatarBotLogin;Password=MotDePasse;MultipleActiveResultSets=True;App=EntityFramework";
             optionsBuilder.UseSqlServer(ConnectionString)
                 .EnableDetailedErrors()
                 .UseLazyLoadingProxies(true)

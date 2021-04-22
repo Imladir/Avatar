@@ -65,12 +65,12 @@ namespace AvatarBot.Bot.Modules
         {
             using var ctx = new AvatarBotContext();
             using var dbTransaction = ctx.Database.BeginTransaction();
-            var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
             try
             {
                 // It's an update, I better load everything I can
-                options.Reattach(ctx);
+                ctx.Characters.Attach(options.Target);
                 //options.Target.FullLoad(ctx);
+                var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
 
                 var player = ctx.Users.Single(x => x.DiscordID == (long)Context.User.Id);
                 if (!ctx.HasPrivilege(server.ID, player.ID)) options.Params["hidden"] = "false";
@@ -84,6 +84,7 @@ namespace AvatarBot.Bot.Modules
             catch (Exception e)
             {
                 dbTransaction.Rollback();
+                var server = ctx.Servers.Single(x => x.DiscordID == (long)Context.Guild.Id);
                 await ReplyAsync(Localization.Format(server.Localization, "character_update_failed", e.Message));
                 Console.WriteLine($"{e.Message}\n{e.StackTrace}");
             }

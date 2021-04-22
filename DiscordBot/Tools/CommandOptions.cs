@@ -23,7 +23,5 @@ namespace AvatarBot.Bot.Tools
             using var dbContext = new AvatarBotContext();
             Target = dbContext.GetCommandTarget(cmdContext.Guild.Id, cmdContext.User.Id, alias) as T;
         }
-        
-        public void Reattach(AvatarBotContext ctx) { ctx.Characters.Attach(Target); }
     }
 }

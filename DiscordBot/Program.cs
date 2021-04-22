@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Hosting;
 
 namespace AvatarBot.Bot
 {
@@ -15,19 +16,12 @@ namespace AvatarBot.Bot
     {
 
         CommandHandler _handler;
-
+            
         static void Main(string[] args)
         => new Program().MainAsync(args).GetAwaiter().GetResult();
 
         public async Task MainAsync(string[] args)
         {
-            var token = Environment.GetEnvironmentVariable("bot_token");
-            if (token == null || token == "")
-            {
-                Console.WriteLine($"Token is absent or invalid. Please check configuration.");
-                Console.ReadLine();
-                return;
-            }
 
             /** Load the localization strings */
             Localization.LoadData();
@@ -36,7 +30,17 @@ namespace AvatarBot.Bot
             var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
+                .AddUserSecrets<Program>()
                 .Build();
+            AvatarBotContext.ConnectionString = config.GetConnectionString("local");
+
+            var token = config.GetValue<string>("bot_token");
+            if (token == null || token == "")
+            {
+                Console.WriteLine($"Token is absent or invalid. Please check configuration.");
+                Console.ReadLine();
+                return;
+            }
 
             /* Discord */
             var client = new DiscordSocketClient(new DiscordSocketConfig
